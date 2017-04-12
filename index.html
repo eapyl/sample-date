@@ -46,6 +46,186 @@
     <svg id="two" width="500" height="300"></svg>
     <svg id="three" width="800" height="380"></svg>
     <script type="text/javascript">
+        var data = [{
+            date: '24-Apr-07',
+            value: '93.24'
+        }, {
+            date: '25-Apr-07',
+            value: '95.35'
+        }, {
+            date: '26-Apr-07',
+            value: '98.84'
+        }, {
+            date: '27-Apr-07',
+            value: '99.92'
+        }, {
+            date: '30-Apr-07',
+            value: '99.80'
+        }, {
+            date: '1-May-07',
+            value: '99.47'
+        }, {
+            date: '2-May-07',
+            value: '100.39'
+        }, {
+            date: '3-May-07',
+            value: '100.40'
+        }, {
+            date: '4-May-07',
+            value: '100.81'
+        }, {
+            date: '7-May-07',
+            value: '103.92'
+        }, {
+            date: '8-May-07',
+            value: '105.06'
+        }, {
+            date: '9-May-07',
+            value: '106.88'
+        }, {
+            date: '10-May-07',
+            value: '107.34'
+        }, {
+            date: '11-May-07',
+            value: '108.74'
+        }, {
+            date: '14-May-07',
+            value: '109.36'
+        }, {
+            date: '15-May-07',
+            value: '107.52'
+        }, {
+            date: '16-May-07',
+            value: '107.34'
+        }, {
+            date: '17-May-07',
+            value: '109.44'
+        }, {
+            date: '18-May-07',
+            value: '110.02'
+        }, {
+            date: '21-May-07',
+            value: '111.98'
+        }, {
+            date: '22-May-07',
+            value: '113.54'
+        }, {
+            date: '23-May-07',
+            value: '112.89'
+        }, {
+            date: '24-May-07',
+            value: '110.69'
+        }, {
+            date: '25-May-07',
+            value: '113.62'
+        }, {
+            date: '29-May-07',
+            value: '114.35'
+        }, {
+            date: '30-May-07',
+            value: '118.77'
+        }, {
+            date: '31-May-07',
+            value: '121.19'
+        }, {
+            date: '1-Jun-07',
+            value: '118.40'
+        }, {
+            date: '4-Jun-07',
+            value: '121.33'
+        }, {
+            date: '5-Jun-07',
+            value: '122.67'
+        }, {
+            date: '6-Jun-07',
+            value: '123.64'
+        }, {
+            date: '7-Jun-07',
+            value: '124.07'
+        }, {
+            date: '8-Jun-07',
+            value: '124.49'
+        }, {
+            date: '11-Jun-07',
+            value: '120.19'
+        }, {
+            date: '12-Jun-07',
+            value: '120.38'
+        }, {
+            date: '13-Jun-07',
+            value: '117.50'
+        }, {
+            date: '14-Jun-07',
+            value: '118.75'
+        }, {
+            date: '15-Jun-07',
+            value: '120.50'
+        }, {
+            date: '18-Jun-07',
+            value: '125.09'
+        }, {
+            date: '19-Jun-07',
+            value: '123.66'
+        }, {
+            date: '20-Jun-07',
+            value: '121.55'
+        }, {
+            date: '21-Jun-07',
+            value: '123.90'
+        }, {
+            date: '22-Jun-07',
+            value: '123.00'
+        }, {
+            date: '25-Jun-07',
+            value: '122.34'
+        }, {
+            date: '26-Jun-07',
+            value: '119.65'
+        }, {
+            date: '27-Jun-07',
+            value: '121.89'
+        }, {
+            date: '28-Jun-07',
+            value: '120.56'
+        }, {
+            date: '29-Jun-07',
+            value: '122.04'
+        }, {
+            date: '2-Jul-07',
+            value: '121.26'
+        }, {
+            date: '3-Jul-07',
+            value: '127.17'
+        }, {
+            date: '5-Jul-07',
+            value: '132.75'
+        }, {
+            date: '6-Jul-07',
+            value: '132.30'
+        }, {
+            date: '9-Jul-07',
+            value: '130.33'
+        }, {
+            date: '10-Jul-07',
+            value: '132.35'
+        }, {
+            date: '11-Jul-07',
+            value: '132.39'
+        }, {
+            date: '12-Jul-07',
+            value: '134.07'
+        }, {
+            date: '13-Jul-07',
+            value: '137.73'
+        }];
+
+        var parseTime = d3.timeParse("%d-%b-%y");
+
+        data.map(x => {
+            x.date = parseTime(x.date);
+            x.value = +x.value;
+        });
+
         (function One() {
             var svg = d3.select("#one"),
                 margin = {
@@ -71,7 +251,7 @@
                     return x(d.date);
                 })
                 .y(function(d) {
-                    return y(d.close);
+                    return y(d.value);
                 });
 
             var area = d3.area()
@@ -80,50 +260,43 @@
                 })
                 .y0(height)
                 .y1(function(d) {
-                    return y(d.close);
+                    return y(d.value);
                 });
 
-            d3.tsv("https://raw.githubusercontent.com/eapyl/sample-date/master/data.tsv", function(d) {
-                d.date = parseTime(d.date);
-                d.close = +d.close;
-                return d;
-            }, function(error, data) {
+            x.domain(d3.extent(data, function(d) {
+                return d.date;
+            }));
+            y.domain(d3.extent(data, function(d) {
+                return d.value;
+            }));
 
-                x.domain(d3.extent(data, function(d) {
-                    return d.date;
-                }));
-                y.domain(d3.extent(data, function(d) {
-                    return d.close;
-                }));
+            g.append("path")
+                .datum(data)
+                .attr("fill", "rgba(31, 118, 189, 0.380392)")
+                .attr("stroke-width", 0)
+                .attr("d", area);
 
-                g.append("path")
-                    .datum(data)
-                    .attr("fill", "rgba(31, 118, 189, 0.380392)")
-                    .attr("stroke-width", 0)
-                    .attr("d", area);
+            g.append("path")
+                .datum(data)
+                .attr("fill", "none")
+                .attr("stroke", "rgb(31, 120, 193)")
+                .attr("stroke-linejoin", "round")
+                .attr("stroke-linecap", "round")
+                .attr("stroke-width", 0.3)
+                .attr("d", line);
 
-                g.append("path")
-                    .datum(data)
-                    .attr("fill", "none")
-                    .attr("stroke", "rgb(31, 120, 193)")
-                    .attr("stroke-linejoin", "round")
-                    .attr("stroke-linecap", "round")
-                    .attr("stroke-width", 0.3)
-                    .attr("d", line);
+            g.append("text")
+                .text('less 1%')
+                .classed("middleText", true)
+                .attr("x", width / 2)
+                .attr("y", height / 2);
 
-                g.append("text")
-                    .text('less 1%')
-                    .classed("middleText", true)
-                    .attr("x", width / 2)
-                    .attr("y", height / 2);
-
-                g.append("text")
-                    .text('Visits')
-                    .classed("middleText", true)
-                    .style('font-size', '1rem')
-                    .attr("x", width / 2)
-                    .attr("y", 10);
-            });
+            g.append("text")
+                .text('Visits')
+                .classed("middleText", true)
+                .style('font-size', '1rem')
+                .attr("x", width / 2)
+                .attr("y", 10);
         })();
 
         (function Two() {
@@ -152,7 +325,7 @@
                     return x(d.date);
                 })
                 .y(function(d) {
-                    return y(d.close);
+                    return y(d.value);
                 });
 
             var area = d3.area()
@@ -161,50 +334,44 @@
                 })
                 .y0(height)
                 .y1(function(d) {
-                    return y(d.close);
+                    return y(d.value);
                 });
 
-            d3.tsv("https://raw.githubusercontent.com/eapyl/sample-date/master/data.tsv", function(d) {
-                d.date = parseTime(d.date);
-                d.close = +d.close;
-                return d;
-            }, function(error, data) {
 
-                x.domain(d3.extent(data, function(d) {
-                    return d.date;
-                }));
-                y.domain(d3.extent(data, function(d) {
-                    return d.close;
-                }));
+            x.domain(d3.extent(data, function(d) {
+                return d.date;
+            }));
+            y.domain(d3.extent(data, function(d) {
+                return d.value;
+            }));
 
-                g.append("path")
-                    .datum(data)
-                    .attr("fill", "rgba(31, 118, 189, 0.380392)")
-                    .attr("stroke-width", 0)
-                    .attr("d", area);
+            g.append("path")
+                .datum(data)
+                .attr("fill", "rgba(31, 118, 189, 0.380392)")
+                .attr("stroke-width", 0)
+                .attr("d", area);
 
-                g.append("path")
-                    .datum(data)
-                    .attr("fill", "none")
-                    .attr("stroke", "rgb(31, 120, 193)")
-                    .attr("stroke-linejoin", "round")
-                    .attr("stroke-linecap", "round")
-                    .attr("stroke-width", 0.3)
-                    .attr("d", line);
+            g.append("path")
+                .datum(data)
+                .attr("fill", "none")
+                .attr("stroke", "rgb(31, 120, 193)")
+                .attr("stroke-linejoin", "round")
+                .attr("stroke-linecap", "round")
+                .attr("stroke-width", 0.3)
+                .attr("d", line);
 
-                g.append("text")
-                    .text('56%')
-                    .classed("middleText", true)
-                    .attr("x", width / 2)
-                    .attr("y", height / 2);
+            g.append("text")
+                .text('56%')
+                .classed("middleText", true)
+                .attr("x", width / 2)
+                .attr("y", height / 2);
 
-                g.append("text")
-                    .text('Income')
-                    .classed("middleText", true)
-                    .style('font-size', '1rem')
-                    .attr("x", width / 2)
-                    .attr("y", 10);
-            });
+            g.append("text")
+                .text('Income')
+                .classed("middleText", true)
+                .style('font-size', '1rem')
+                .attr("x", width / 2)
+                .attr("y", 10);
         })();
 
         (function Three() {
@@ -242,50 +409,43 @@
                 })
                 .y0(height)
                 .y1(function(d) {
-                    return y(d.close);
+                    return y(d.value);
                 });
 
-            d3.tsv("https://raw.githubusercontent.com/eapyl/sample-date/master/data.tsv", function(d) {
-                d.date = parseTime(d.date);
-                d.close = +d.close;
-                return d;
-            }, function(error, data) {
+            x.domain(d3.extent(data, function(d) {
+                return d.date;
+            }));
+            y.domain(d3.extent(data, function(d) {
+                return d.value;
+            }));
 
-                x.domain(d3.extent(data, function(d) {
-                    return d.date;
-                }));
-                y.domain(d3.extent(data, function(d) {
-                    return d.close;
-                }));
+            g.append("path")
+                .datum(data)
+                .attr("fill", "rgba(31, 118, 189, 0.380392)")
+                .attr("stroke-width", 0)
+                .attr("d", area);
 
-                g.append("path")
-                    .datum(data)
-                    .attr("fill", "rgba(31, 118, 189, 0.380392)")
-                    .attr("stroke-width", 0)
-                    .attr("d", area);
+            g.append("path")
+                .datum(data)
+                .attr("fill", "none")
+                .attr("stroke", "rgb(31, 120, 193)")
+                .attr("stroke-linejoin", "round")
+                .attr("stroke-linecap", "round")
+                .attr("stroke-width", 0.3)
+                .attr("d", line);
 
-                g.append("path")
-                    .datum(data)
-                    .attr("fill", "none")
-                    .attr("stroke", "rgb(31, 120, 193)")
-                    .attr("stroke-linejoin", "round")
-                    .attr("stroke-linecap", "round")
-                    .attr("stroke-width", 0.3)
-                    .attr("d", line);
+            g.append("text")
+                .text('4%')
+                .classed("middleText", true)
+                .attr("x", width / 2)
+                .attr("y", height / 2);
 
-                g.append("text")
-                    .text('4%')
-                    .classed("middleText", true)
-                    .attr("x", width / 2)
-                    .attr("y", height / 2);
-
-                g.append("text")
-                    .text('Weight')
-                    .classed("middleText", true)
-                    .style('font-size', '1rem')
-                    .attr("x", width / 2)
-                    .attr("y", 10);
-            });
+            g.append("text")
+                .text('Weight')
+                .classed("middleText", true)
+                .style('font-size', '1rem')
+                .attr("x", width / 2)
+                .attr("y", 10);
         })();
     </script>
 </body>
